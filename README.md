@@ -1,90 +1,54 @@
-# gatsby-remark-videos
+# gatsby-remark-gifs-to-videos
 
-The intent of this plugin is to aid in the embedding of looping 'html5 gifv'
-like videos from markdown.
+[![Npm version][badge-npm]][npm]
+[![Npm downloads][badge-npm-dl]][npm]
+[![MIT license][badge-licence]](./licence.md)
+[![PRs welcome][badge-prs-welcome]](#contributing)
 
-## Install
+`gatsby-remark-gifs-to-videos` is a [Gatsby](https://www.gatsbyjs.org/) [remark](https://remark.js.org/) plugin to transform animated GIF to autoplay videos.
 
-`npm install --save gatsby-remark-videos gatsby-plugin-ffmpeg`
-
-This package is dependent on gatsby-plugin-ffmpeg which has the requirement of ffmpeg installed. Please follow the instructions at https://github.com/Mike-Dax/gatsby-plugin-ffmpeg to install the required dependencies.
+The main purpose is to [improve performances](https://www.smashingmagazine.com/2018/11/gif-to-video/).
 
 ## Usage
 
-The order of the pipelines will influence the final order in the `<video />`
-tag.
+1. Download `gatsby-remark-gifs-to-videos` from the NPM registry:
 
-Currently it only detects files with the extensions `avi`, `mp4`, `mov`, `mkv`. If you have a different container and would like it added, open an issue or create a PR and I'm happy to include it.
-
-### Configuration
-
-Make sure this plugin comes before `gatsby-remark-images` otherwise it might complain about unknown image file formats.
-
-```javascript
-// In your gatsby-config.js
-plugins: [
-  ...
-  {
-    resolve: `gatsby-remark-videos`,
-    options: {
-      pipelines: [
-        {
-          name: 'vp9',
-          transcode: chain =>
-            chain
-              .videoCodec('libvpx-vp9')
-              .noAudio()
-              .outputOptions(['-crf 20', '-b:v 0']),
-          maxHeight: 480,
-          maxWidth: 900,
-          fileExtension: 'webm',
-        },
-        {
-          name: 'h264',
-          transcode: chain =>
-            chain
-              .videoCodec('libx264')
-              .noAudio()
-              .addOption('-profile:v', 'main')
-              .addOption('-pix_fmt', 'yuv420p')
-              .outputOptions(['-movflags faststart'])
-              .videoBitrate('1000k'),
-          maxHeight: 480,
-          maxWidth: 900,
-          fileExtension: 'mp4',
-        },
-      ],
-    }
-  },
-  ...
-]
+```shell
+yarn add gatsby-remark-gifs-to-videos
 ```
 
-Also make sure you have a plugin that copies the files you are referencing, for example `gatsby-remark-copy-linked-files`.
+3. Add the plugin in your `gatsby-config.js` file
 
+```js
+module.exports = {
+  plugins: [
+    {
+      resolve: "gatsby-transformer-remark",
+      options: {
+        plugins: [
+          "gatsby-remark-gifs-to-videos",
+          //
+          // --- Optional ---
+          // "gatsby-remark-copy-linked-files",
+        ],
+      },
+    },
+  ],
+}
 ```
-...
-{
-  resolve: `gatsby-remark-copy-linked-files`,
-  options: {},
-},
-...
-```
 
-### Markdown Syntax
+| Option    | Required | Type   | Default |
+| --------- | -------- | ------ | ------- |
+| maxHeight | `false`  | Number | 480     |
+| maxWidth  | `false`  | Number | 680     |
 
-Markdown image syntax is used:
+## Related
 
-```
-Video one:
-![](video.avi)
-```
+[Improve Animated GIF Performance With HTML5 Video](https://www.smashingmagazine.com/2018/11/gif-to-video/)
 
-Creates roughly this:
-
-```html
-<video autoplay loop>
-  <source src="/static/video-hash-optshash.webm" type="video/webm" />
-  <source src="/static/video-hash-optshash.mp4" type="video/mp4" />
-</video>
-```
+[badge-npm]: https://img.shields.io/npm/v/gatsby-remark-gifs-to-videos.svg?style=flat-square
+[badge-npm-dl]: https://img.shields.io/npm/dt/gatsby-remark-gifs-to-videos.svg?style=flat-square
+[badge-licence]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
+[badge-prs-welcome]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
+[npm]: https://www.npmjs.org/package/gatsby-remark-gifs-to-videos
+[github-issue]: https://github.com/cedricdelpoux/gatsby-remark-gifs-to-videos/issues/new
