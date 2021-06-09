@@ -1,14 +1,12 @@
 const crypto = require(`crypto`)
 const _ = require(`lodash`)
-const util = require("util")
 const ProgressBar = require(`progress`)
 const queue = require(`async/queue`)
 const path = require(`path`)
 const {existsSync} = require("fs")
 const {actions: boundActionCreators} = require(`gatsby/dist/redux/actions`)
-const ffmpeg = require("fluent-ffmpeg")
-
-const ffprobeAsync = util.promisify(ffmpeg.ffprobe)
+const {ffmpeg, ffprobe} = require("./ffmpeg")
+const {encoders} = require("./encoders")
 
 const bar = new ProgressBar(
   `Transcoding Videos [:bar] :current/:total :elapsed secs :percent`,
@@ -31,7 +29,7 @@ const reportError = (message, err, reporter) => {
 }
 
 function notMemoizedGetVideoDimensions(path) {
-  return ffprobeAsync(path).then((metadata) => {
+  return ffprobe(path).then((metadata) => {
     if (!metadata.streams) {
       console.warn(path, "has no video streams?")
       return null
@@ -115,7 +113,7 @@ const processFile = async (file, jobs, cb, reporter) => {
           id: `processing video ${job.file.absolutePath}`,
           videosFinished,
         },
-        {name: `gatsby-plugin-ffmpeg`}
+        {name: `gatsby-remark-gifs-to-videos`}
       )
 
       if (err) {
@@ -177,7 +175,7 @@ const queueJob = (job, reporter) => {
           id: `processing video ${job.file.absolutePath}`,
           videosCount: _.values(toProcess[inputFileKey]).length,
         },
-        {name: `gatsby-plugin-ffmpeg`}
+        {name: `gatsby-remark-gifs-to-videos`}
       )
       // We're now processing the file's jobs.
       processFile(
@@ -188,7 +186,7 @@ const queueJob = (job, reporter) => {
             {
               id: `processing video ${job.file.absolutePath}`,
             },
-            {name: `gatsby-plugin-ffmpeg`}
+            {name: `gatsby-remark-gifs-to-videos`}
           )
           cb()
         },
@@ -271,7 +269,8 @@ async function queueVideoTranscode({file, options = {}, reporter}) {
   }
 }
 
-async function transcode({file, pipelines, reporter}) {
+async function transformGifToVideo({file, options, reporter}) {
+  const pipelines = encoders.map((encoder) => ({...encoder, ...options}))
   const videos = await Promise.all(
     pipelines.map((pipeline) =>
       queueVideoTranscode({
@@ -309,5 +308,4 @@ async function transcode({file, pipelines, reporter}) {
   }
 }
 
-exports.getVideoDimensions = getVideoDimensions
-exports.transcode = transcode
+exports.transformGifToVideo = transformGifToVideo
