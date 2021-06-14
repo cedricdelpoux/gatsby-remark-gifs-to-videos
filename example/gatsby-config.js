@@ -12,8 +12,14 @@ module.exports = {
       options: {
         plugins: [
           {
-            // resolve: "gatsby-remark-gifs",
+            // resolve: "gatsby-remark-gifs-to-videos",
             resolve: require.resolve(`..`),
+            options: {
+              autoplay: false,
+              loop: false,
+              controls: true,
+              preload: "metadata",
+            },
           },
         ],
       },

@@ -1,10 +1,6 @@
-const { resolve } = require("path")
+const {resolve} = require("path")
 
-exports.createPages = async ({
-  graphql,
-  actions: { createPage },
-  reporter,
-}) => {
+exports.createPages = async ({graphql, actions: {createPage}, reporter}) => {
   const result = await graphql(
     `
       {
@@ -24,10 +20,10 @@ exports.createPages = async ({
   }
 
   try {
-    const { allMarkdownRemark } = result.data
+    const {allMarkdownRemark} = result.data
 
     if (allMarkdownRemark) {
-      allMarkdownRemark.nodes.forEach(({ fields: { slug } }) => {
+      allMarkdownRemark.nodes.forEach(({fields: {slug}}) => {
         createPage({
           path: slug,
           component: resolve("src/templates/page.js"),
@@ -35,6 +31,6 @@ exports.createPages = async ({
       })
     }
   } catch (e) {
-    reporter.panic(`source-google-docs: ` + e.message)
+    reporter.panic(e.message)
   }
 }
