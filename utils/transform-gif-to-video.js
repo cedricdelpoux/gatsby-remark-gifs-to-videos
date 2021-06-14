@@ -303,7 +303,7 @@ async function transformGifToVideo({file, options, reporter}) {
     height: videos[0].height,
     presentationMaxWidth,
     presentationMaxHeight,
-    videos: videos,
+    versions: videos,
     originalName: originalName,
   }
 }

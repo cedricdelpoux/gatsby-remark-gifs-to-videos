@@ -29,13 +29,13 @@ module.exports = (
 
             if (!gifNode) return resolve()
 
-            let result = await transformGifToVideo({
+            let video = await transformGifToVideo({
               file: gifNode,
               options,
               reporter,
             })
 
-            const rawHTML = getVideoHtml(result)
+            const rawHTML = getVideoHtml({video, options})
 
             if (rawHTML) {
               node.type = `html`

@@ -37,10 +37,16 @@ module.exports = {
 }
 ```
 
-| Option    | Required | Type   | Default |
-| --------- | -------- | ------ | ------- |
-| maxHeight | `false`  | Number | 480     |
-| maxWidth  | `false`  | Number | 680     |
+| Option      | Required | Type    | Default |
+| ----------- | -------- | ------- | ------- |
+| maxHeight   | `false`  | Number  | 480     |
+| maxWidth    | `false`  | Number  | 680     |
+| autoplay    | `false`  | Boolean | true    |
+| loop        | `false`  | Boolean | true    |
+| muted       | `false`  | Boolean | true    |
+| playsinline | `false`  | Boolean | true    |
+| controls    | `false`  | Boolean | false   |
+| preload     | `false`  | String  | "auto"  |
 
 ## Related
 
