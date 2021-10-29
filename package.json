@@ -1,6 +1,6 @@
 {
   "name": "gatsby-remark-gifs-to-videos",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.5",
   "description": "Gatsby remark plugin to transform animated GIF to autoplay videos",
   "repository": "https://github.com/cedricdelpoux/gatsby-remark-gifs-to-videos",
   "homepage": "https://github.com/cedricdelpoux/gatsby-remark-gifs-to-videos",
